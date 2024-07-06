@@ -6,7 +6,6 @@ const Sidebar = () => {
   return (
     <div className='sidebar'>
       <div className='sidebar-logo'>
-        <SmilePlus color='#ff9b73' size={30} /> 
         <span>Noty</span>
       </div>
       <ul>
