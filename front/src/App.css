@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playwrite+MX:wght@100..400&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -35,6 +36,7 @@ ul {
     display: flex;
     gap: 40px;
 }
+
 .main {
     flex: 1;
 }
@@ -87,29 +89,35 @@ ul {
     width: 100%;
     gap: 30px;
 }
+
 .user-info {
     display: flex;
     gap: 10px;
     align-items: center;
 }
-.photo > img {
+
+.photo>img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
 }
+
 .user-info p {
     font-size: 12px;
 }
+
 .searchIcon {
     position: absolute;
     top: 11px;
     left: 10px;
 }
+
 .search-input {
     position: relative;
     flex: 1;
 }
+
 .search {
     padding: 15px 10px 15px 40px;
     border-radius: 30px;
@@ -125,10 +133,12 @@ ul {
 .notes {
     margin-top: 60px;
 }
+
 .notes-cards {
     display: flex;
     flex-wrap: wrap;
 }
+
 .note-card {
     margin: 10px;
     border-radius: 15px;
@@ -139,13 +149,16 @@ ul {
     padding-bottom: 50px;
     position: relative;
 }
+
 .note-title {
     margin-bottom: 10px;
 }
+
 .note-content {
     color: #3a3a3a;
     font-size: 14px;
 }
+
 .pin-it {
     position: absolute;
     top: 10px;
@@ -161,4 +174,27 @@ ul {
     display: flex;
     border-radius: 50%;
     cursor: pointer;
+}
+
+/*
+Login page
+*/
+.login-page {
+    width: 700px;
+    height: 650px;
+    background-image: url('login-bg.jpg');
+    margin: 30px auto 0;
+    background-position: center;
+    background-size: cover;
+    background-position-y: bottom;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form {
+    width: 90%;
+    height: 90%;
+    background-color: rgb(255 255 255 / 30%);
+    backdrop-filter: blur(10px);
 }

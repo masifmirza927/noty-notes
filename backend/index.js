@@ -1,5 +1,6 @@
 const express = require("express");
 const UserModel = require("./models/User.model");
+const NoteModel = require("./models/Note.model");
 const { default: mongoose } = require("mongoose");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -86,19 +87,83 @@ app.post("/user/login", async (req, res) => {
     } catch (error) {
         
     }
-})
+});
 
-
-
-app.get("/notes", async (req, res) => {
+// create a new note
+app.post("/notes", async (req, res) => {
     try {
+        const {title, content, userId} = req.body;
+
+
+        //converting normal string id to mongodb object id
+        const userIdObject = new mongoose.Types.ObjectId(userId);
+
+        const newNote = await NoteModel.create({title: title, content: content, userId: userIdObject});
+
+        return res.status(201).json({
+            errors: false,
+            message: "successfully created",
+            note: newNote
+        })
 
     } catch (error) {
-
+        console.log(error.message);
+        return res.status(500).json({
+            errors: true,
+        })
     }
 });
 
+// get all notes
+app.get("/notes", async (req, res) => {
+    try {
+        const notes = await NoteModel.find();
+        return res.status(201).json({
+            errors: false,
+            notes: notes
+        })
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            errors: true
+        })
+    }
+});
 
+// update a note
+app.put("/notes/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        await NoteModel.findByIdAndUpdate(id, req.body);
+
+        return res.status(200).json({
+            errors: false,
+            message: "successfully updated"
+        })
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            errors: true
+        })
+    }
+});
+
+// delete a note
+app.delete("/notes/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        await NoteModel.findByIdAndDelete(id);
+        return res.status(200).json({
+            errors: false,
+            message: "successfully deleted"
+        })
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            errors: true
+        })
+    }
+});
 
 mongoose.connect("mongodb://localhost:27017/notydb").then( () => {
     app.listen(port, () => console.log("server & db is up..."));
