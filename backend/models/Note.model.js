@@ -11,9 +11,9 @@ const noteSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    userId: {
+    user: {
         type: mongoose.Schema.ObjectId,
-        required: true
+        ref: "User",
     },
     isPinned: {
         type: Boolean,
