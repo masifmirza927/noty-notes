@@ -94,18 +94,44 @@ app.post("/user/login", async (req, res) => {
     }
 });
 
-app.get("/notes/me", async (req, res) => {
+
+
+
+
+
+
+app.get("/notes/me", AuthCheck,  async (req, res) => {
     try {
-        const userId = "668ba4ee6febd2b4ff9c3970";
-        const notes = await NoteModel.find().populate({
-            path: "user",
-            select: "name email"  // Include only name and email
-        });
+       // console.log(req.body.userId);
+       const userId = new mongoose.Types.ObjectId(req.body.userId);
+       
+       const notes = await NoteModel.find({user: userId});
+
+        // const notes = await NoteModel.find().populate({
+        //     path: "user",
+        //     select: "name email"  // Include only name and email
+        // });
         return res.json({
             notes: notes
         })
     } catch (error) {
         console.log(error.message);
+    }
+});
+
+// get all notes
+app.get("/notes", async (req, res) => {
+    try {
+        const notes = await NoteModel.find();
+        return res.status(201).json({
+            errors: false,
+            notes: notes
+        })
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            errors: true
+        })
     }
 });
 
@@ -133,21 +159,6 @@ app.post("/notes", AuthCheck,  async (req, res) => {
     }
 });
 
-// get all notes
-app.get("/notes", async (req, res) => {
-    try {
-        const notes = await NoteModel.find();
-        return res.status(201).json({
-            errors: false,
-            notes: notes
-        })
-    } catch (error) {
-        console.log(error.message);
-        return res.status(500).json({
-            errors: true
-        })
-    }
-});
 
 // update a note
 app.put("/notes/:id", async (req, res) => {
@@ -168,10 +179,18 @@ app.put("/notes/:id", async (req, res) => {
 });
 
 // delete a note
-app.delete("/notes/:id", async (req, res) => {
+app.delete("/notes/:id",  async (req, res) => {
     try {
         const id = req.params.id;
-        await NoteModel.findByIdAndDelete(id);
+
+        // todo check user is the owner of this note ?
+
+        const note = await NoteModel.findByIdAndDelete(id);
+        
+        console.log( note.user.toString() )
+
+        return;
+
         return res.status(200).json({
             errors: false,
             message: "successfully deleted"
@@ -184,6 +203,24 @@ app.delete("/notes/:id", async (req, res) => {
     }
 });
 
+
+// update inPinned note
+app.put("/notes/pinned/:id", AuthCheck, async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        await NoteModel.findByIdAndUpdate(id, {isPinned: req.body.isPinned} );
+        return res.status(200).json({
+            errors: false,
+            message: "successfully updated"
+        })
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            errors: true
+        })
+    }
+})
 
 // authenticate jwt token
 app.post("/user/verify", async (req, res) => {

@@ -20,7 +20,7 @@ const  AuthCheck = async (req, res, next) => {
         console.log(error.message);
         return res.status(400).json({
             errors: true,
-            message: "Authorization failed"
+            message: "Authentication failed"
         })
     }
 }
