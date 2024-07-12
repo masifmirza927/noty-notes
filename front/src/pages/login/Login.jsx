@@ -1,11 +1,16 @@
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "../../context/AuthContext";
 
 const Login = () => {
-
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const ctx = useContext(AuthContext);
+
+  console.log(ctx);
 
   const onSubmit = (data) => {
-    console.log(data);
+    // calling login function
+    ctx.loginUser(data);
   }
 
   return (
@@ -14,7 +19,7 @@ const Login = () => {
         <h1 className='text-center text-3xl font-bold my-3 mb-10'>login form</h1>
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
           <div className="mb-10">
-            <input type='text' {...register('username', {
+            <input type='text' {...register('email', {
               required: {
                 value: true,
                 message: "Username name field is required."
@@ -22,8 +27,8 @@ const Login = () => {
             })} className='w-full p-5 rounded-md bg-transparent border text-white' placeholder='Email address' />
 
             {
-              errors.username && <p className="text-red-600 my-3 bg-gray-50 p-2">
-                <span>{errors.username.message}</span>
+              errors.email && <p className="text-red-600 my-3 bg-gray-50 p-2">
+                <span>{errors.email.message}</span>
               </p>
             }
           </div>
@@ -43,6 +48,12 @@ const Login = () => {
           }
 
           <button className='w-full p-5 mb-3 rounded-md bg-gray-900 text-white border-0 text-xl mt-3 hover:bg-gray-800'>Login to noty</button>
+          {
+            ctx.error && <p className="text-red-600 my-3 bg-gray-50 p-2">
+              <span>{ctx.error}</span>
+            </p>
+          }
+       
         </form>
       </div>
     </div>

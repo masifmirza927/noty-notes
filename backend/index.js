@@ -8,11 +8,14 @@ const saltRounds = 10;
 const app = express();
 const port = 3001;
 const JWT_SECRET = "asdfa8765@@@vmnxclvnb3r2p9y29$%%^^78p34yh;skdfn;kxncvkabnsvlkbzxclk";
+const cors = require("cors");
 
 
 
 //middleware
 app.use(express.json());
+app.use(cors());
+
 const AuthCheck = require("./middlewares/Auth.middleware.js");
 
 app.get("/", (req, res) => {
@@ -63,7 +66,7 @@ app.post("/user/login", async (req, res) => {
         // find user is registered or not
         const user = await UserModel.findOne({ email: email });
         if (user === null) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: true,
                 message: "username or password is incorrect!"
             });
@@ -72,7 +75,7 @@ app.post("/user/login", async (req, res) => {
         // then check password is correct ?
         const isPassCorrect = await bcrypt.compare(password, user.password);
         if (isPassCorrect === false) {
-            return res.status(400).json({
+            return res.status(200).json({
                 errors: true,
                 message: "username or password is incorrect!"
             });
@@ -90,7 +93,10 @@ app.post("/user/login", async (req, res) => {
         });
 
     } catch (error) {
-
+        res.status(500).json({
+            errors: true,
+            message: "internal server error"
+        })
     }
 });
 
