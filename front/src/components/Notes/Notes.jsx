@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import NoteCard from '../NoteCard/NoteCard'
+import { AuthContext } from '../../context/AuthContext'
+import NotesLength from '../NotesLength/NotesLength';
 
 const Notes = () => {
+    const ctx = useContext(AuthContext);
+
     const notes = [
         {
             id: 1,
@@ -36,12 +40,14 @@ const Notes = () => {
             isDeleted: true,
         }
     ]
+
+
     return (
         <div className='notes'>
-            <h5>All Notes ( 16 notes )</h5>
+            <NotesLength />
             <div className='notes-cards'>
                 {
-                    notes.map((note, index) => {
+                    ctx.notes.length > 0 && ctx.notes.map((note, index) => {
                         return <NoteCard note={note} />
                     })
                 }

@@ -18,6 +18,11 @@ const Home = () => {
     }
   });
 
+  useEffect( () => {
+    ctx.getUserNotes();
+    
+  }, [])
+
   if (ctx.isLogin == true) {
     return (
       <div className='home'>

@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from "react-router-dom";
-import {House, Bell, SmilePlus, PencilLine, Trash, Pin} from "lucide-react";
+import {House, PencilLine, Pin, LogOut, Archive, User} from "lucide-react";
+import { AuthContext } from '../../context/AuthContext';
 
 const Sidebar = () => {
+  const ctx = useContext(AuthContext);
   return (
     <div className='sidebar'>
       <div className='sidebar-logo'>
@@ -16,7 +18,7 @@ const Sidebar = () => {
         </li>
         <li>
           <Link className='sidebar-link' to='/'>
-            <Bell size={22} color='black' />
+            <User size={22} color='black' />
           </Link>
         </li>
         <li>
@@ -31,7 +33,12 @@ const Sidebar = () => {
         </li>
         <li>
           <Link className='sidebar-link' to='/'>
-            <Trash size={22} color='black' />
+            <Archive size={22} color='black' />
+          </Link>
+        </li>
+        <li>
+          <Link className='sidebar-link' to='/'>
+            <LogOut size={22} color='black' onClick={ () => ctx.logout()} />
           </Link>
         </li>
       </ul>
