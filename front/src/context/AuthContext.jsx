@@ -1,7 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { getToken } from "../utils";
+import { getToken, removeToken } from "../utils";
 
 
 // create a context
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
                 }
             });
 
-            if(res.data.errors == true) {
+            if (res.data.errors == true) {
                 setError(res.data.message)
             } else {
                 setNotes(res.data.notes);
@@ -62,10 +62,39 @@ export const AuthProvider = ({ children }) => {
 
     // logout user
     const logout = async () => {
-        localStorage.removeItem("accessToken");
+        removeToken();
         setIsLogin(false);
         navigate("/login");
     }
+
+
+
+    useEffect(() => {
+        const verifyToken = async () => {
+            const token = getToken();
+    
+            if (token) {
+                try {
+                    const res = await axios.post("http://localhost:3001/user/verify", { token: token });
+                    setIsLogin(true);
+                    navigate("/");
+                    // Handle success (e.g., set login state)
+                } catch (error) {
+                    removeToken();
+                    setIsLogin(false);
+                    navigate("/login");
+                    // Handle error (e.g., navigate to login)
+                }
+            } else {
+                setIsLogin(false);
+                navigate("/login");
+            }
+        };
+    
+        verifyToken();
+    }, []);
+
+
 
 
     return <AuthContext.Provider value={{ isLogin, setIsLogin, loading, loginUser, error, getUserNotes, notes, logout }}>

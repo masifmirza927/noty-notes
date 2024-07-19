@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, Modal } from 'antd';
+import { Button, Form, Input, Modal } from 'antd';
 import {httpClient} from '../../lib/httpClient';
 import { useState } from 'react';
 const { TextArea } = Input;

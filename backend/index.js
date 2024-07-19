@@ -83,7 +83,7 @@ app.post("/user/login", async (req, res) => {
 
         //todo JWT token
         // we are generating jwt token for authentication, and giving it expiry of 1 hour.
-        const access_token = await jwt.sign({userId: user._id}, JWT_SECRET,  { expiresIn: '2h' });
+        const access_token = await jwt.sign({userId: user._id}, JWT_SECRET,  { expiresIn: '2m' });
 
         // send success response
         return res.status(200).json({
@@ -232,17 +232,16 @@ app.put("/notes/pinned/:id", AuthCheck, async (req, res) => {
 app.post("/user/verify", async (req, res) => {
     try {
         const token = req.body.token;
-        
-        const token_verify = await jwt.verify(token, JWT_SECRET);
-        console.log(token_verify);
-        if(!token_verify) {
-            console.log("not valid")
-        } else {
-            console.log("valid")
-        }
+        await jwt.verify(token, JWT_SECRET);
+        return res.status(200).json({
+            errors: false
+        });
 
     } catch (error) {
-        console.log(error.message);
+        return res.status(401).json({
+            errors: true
+        });
+        
     }
 })
 
