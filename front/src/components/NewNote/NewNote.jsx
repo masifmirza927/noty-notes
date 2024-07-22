@@ -38,11 +38,10 @@ const NewNote = () => {
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
-        footer={[]}
+        footer={null}
       >
 
         <NoteForm setOpen={setOpen} />
-      <button onClick={ () => setOpen(false)}> close me </button>
       </Modal>
       <div className="newNoteBtn" onClick={() => setOpen(true)}>
         <Plus color="red" size={26} />

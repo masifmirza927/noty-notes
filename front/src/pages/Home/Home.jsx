@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import Topbar from '../../components/Topbar/Topbar'
 import Main from '../../components/Main/Main'
@@ -11,17 +11,16 @@ const Home = () => {
   const ctx = useContext(AuthContext);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     if (ctx.isLogin === false) {
       navigate("/login");
     }
   });
 
-  useEffect( () => {
+  useEffect(() => {
     ctx.getUserNotes();
-    
-  }, [])
+
+  }, []);
 
   if (ctx.isLogin == true) {
     return (

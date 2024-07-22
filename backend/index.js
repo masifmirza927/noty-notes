@@ -83,7 +83,7 @@ app.post("/user/login", async (req, res) => {
 
         //todo JWT token
         // we are generating jwt token for authentication, and giving it expiry of 1 hour.
-        const access_token = await jwt.sign({userId: user._id}, JWT_SECRET,  { expiresIn: '2m' });
+        const access_token = await jwt.sign({userId: user._id}, JWT_SECRET,  { expiresIn: '30m' });
 
         // send success response
         return res.status(200).json({
