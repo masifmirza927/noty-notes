@@ -62,9 +62,9 @@ export const AuthProvider = ({ children }) => {
 
     // logout user
     const logout = async () => {
-        removeToken();
+        //removeToken();
         setIsLogin(false);
-        navigate("/login");
+        //navigate("/login");
     }
 
 
