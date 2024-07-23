@@ -1,16 +1,29 @@
 const express = require("express");
+const app = express();
 const UserModel = require("./models/User.model");
 const NoteModel = require("./models/Note.model");
 const  mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const saltRounds = 10;
-const app = express();
 const port = 3001;
+const multer  = require('multer')
 const cors = require("cors");
 
 require('dotenv').config();
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const ext = file.mimetype.split("/")[1];
+      cb(null, file.fieldname + '-' + uniqueSuffix + "." + ext);
+    }
+  })
+  
+  const upload = multer({ storage: storage });
 
 
 //middleware
@@ -100,9 +113,6 @@ app.post("/user/login", async (req, res) => {
         })
     }
 });
-
-
-
 
 
 
@@ -244,7 +254,28 @@ app.post("/user/verify", async (req, res) => {
         });
         
     }
+});
+
+
+// uploading files in node js
+app.post("/imageupload", upload.single('image'), async (req, res) => {
+    try {
+        
+        console.log(req.file);
+
+        return res.status(200).json({
+            errors: false,
+            message: "successfully uploaded"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            errors: true,
+            message: "internal server error"
+        })
+    }
 })
+
+
 
 mongoose.connect("mongodb://localhost:27017/notydb").then(() => {
     app.listen(port, () => console.log("server & db is up..."));
