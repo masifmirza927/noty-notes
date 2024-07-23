@@ -7,8 +7,9 @@ const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 const app = express();
 const port = 3001;
-const JWT_SECRET = "asdfa8765@@@vmnxclvnb3r2p9y29$%%^^78p34yh;skdfn;kxncvkabnsvlkbzxclk";
 const cors = require("cors");
+
+require('dotenv').config();
 
 
 
@@ -83,7 +84,7 @@ app.post("/user/login", async (req, res) => {
 
         //todo JWT token
         // we are generating jwt token for authentication, and giving it expiry of 1 hour.
-        const access_token = await jwt.sign({userId: user._id}, JWT_SECRET,  { expiresIn: '30m' });
+        const access_token = await jwt.sign({userId: user._id}, process.env.JWT_SECRET,  { expiresIn: '30m' });
 
         // send success response
         return res.status(200).json({
@@ -232,7 +233,7 @@ app.put("/notes/pinned/:id", AuthCheck, async (req, res) => {
 app.post("/user/verify", async (req, res) => {
     try {
         const token = req.body.token;
-        await jwt.verify(token, JWT_SECRET);
+        await jwt.verify(token, process.env.JWT_SECRET);
         return res.status(200).json({
             errors: false
         });

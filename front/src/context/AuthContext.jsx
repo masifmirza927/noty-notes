@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { getToken, removeToken } from "../utils";
+import  {httpClient} from "../lib/httpClient";
 
 
 // create a context
@@ -19,16 +19,14 @@ export const AuthProvider = ({ children }) => {
     // login call
     const loginUser = async (credentials) => {
         setLoading(true);
-        const res = await axios.post("http://localhost:3001/user/login", credentials);
+        const res = await httpClient.post("/user/login", credentials);
         if (res.data.errors == true) {
             setError(res.data.message);
         } else if (res.data.errors == false) {
-            setIsLogin(true);
             // saving access token to local storeage to keep the user logged in
             localStorage.setItem("accessToken", res.data.accessToken);
+            setIsLogin(true);
             navigate('/');
-
-            console.log(res.data);
         }
 
         setLoading(false);
@@ -39,11 +37,7 @@ export const AuthProvider = ({ children }) => {
     const getUserNotes = async () => {
         const token = getToken();
         if (token) {
-            const res = await axios.get("http://localhost:3001/notes/me", {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const res = await httpClient.get("/notes/me");
 
             if (res.data.errors == true) {
                 setError(res.data.message)
@@ -75,7 +69,7 @@ export const AuthProvider = ({ children }) => {
     
             if (token) {
                 try {
-                    const res = await axios.post("http://localhost:3001/user/verify", { token: token });
+                    await httpClient.post("/user/verify", { token: token });
                     setIsLogin(true);
                     navigate("/");
                     // Handle success (e.g., set login state)

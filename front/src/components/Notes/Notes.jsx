@@ -11,8 +11,8 @@ const Notes = () => {
             <NotesLength />
             <div className='notes-cards'>
                 {
-                    ctx.notes.length > 0 && ctx.notes.map((note, index) => {
-                        return <NoteCard note={note} />
+                    ctx.notes.length > 0 && ctx.notes.map((note) => {
+                        return <NoteCard note={note} key={note._id} />
                     })
                 }
             </div>

@@ -13,10 +13,11 @@ const Login = () => {
     ctx.loginUser(data);
   }
 
+
   return (
     <div id='login' className='login-page'>
       <div className='login-form p-10'>
-        <h1 className='text-center text-3xl font-bold my-3 mb-10'>login form</h1>
+        <h1 className='text-center text-3xl font-bold my-3 mb-10'>Login form</h1>
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
           <div className="mb-10">
             <input type='text' {...register('email', {
