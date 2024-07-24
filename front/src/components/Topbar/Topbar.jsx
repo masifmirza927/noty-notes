@@ -1,17 +1,23 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import {Search} from "lucide-react";
+import { AuthContext } from '../../context/AuthContext';
 
 const Topbar = () => {
+  const ctx = useContext(AuthContext);
   return (
     <div className='topbar'>
       <div className='user-info'>
         <div className='photo'>
-          <img src='https://i.pravatar.cc/300' />
+          {/* <img src='https://i.pravatar.cc/300' /> */}
+          {
+            ctx.user?.photo && <img src={`http://localhost:3001/${ctx.user.photo}`} width='60px' />
+          }
+          
         </div>
         <div className='info'>
-          <h5>Mahdi Jalil</h5>
-          <p>masifmirza927@gmail.com</p>
+          <h5>{ctx.user?.name}</h5>
+          <p>{ctx.user?.email}</p>
         </div>
       </div>
       <div className='search-input'>

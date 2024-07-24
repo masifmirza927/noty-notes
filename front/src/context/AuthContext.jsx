@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [notes, setNotes] = useState([]);
+    const [user, setUser] = useState(null);
 
     const navigate = useNavigate();
 
@@ -25,6 +26,7 @@ export const AuthProvider = ({ children }) => {
         } else if (res.data.errors == false) {
             // saving access token to local storeage to keep the user logged in
             localStorage.setItem("accessToken", res.data.accessToken);
+            setUser(res.data.user);
             setIsLogin(true);
             navigate('/');
         }
@@ -92,7 +94,7 @@ export const AuthProvider = ({ children }) => {
 
 
 
-    return <AuthContext.Provider value={{ isLogin, setIsLogin, loading, loginUser, error, getUserNotes, notes, logout }}>
+    return <AuthContext.Provider value={{ isLogin, setIsLogin, loading, loginUser, error, getUserNotes, notes, logout, user }}>
         {children}
     </AuthContext.Provider>
 

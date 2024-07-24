@@ -12,6 +12,10 @@ const cors = require("cors");
 
 require('dotenv').config();
 
+// we are making uploads folder public
+app.use(express.static('uploads'));
+
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'uploads/')
@@ -103,7 +107,8 @@ app.post("/user/login", async (req, res) => {
         return res.status(200).json({
             errors: false,
             message: "successfully logged in",
-            accessToken: access_token
+            accessToken: access_token,
+            user: {name: user.name, photo: user.photo, email: user.email}
         });
 
     } catch (error) {
@@ -258,13 +263,21 @@ app.post("/user/verify", async (req, res) => {
 
 
 // uploading files in node js
-app.post("/imageupload", upload.single('image'), async (req, res) => {
+app.put("/update-profile", [AuthCheck, upload.single('image')], async (req, res) => {
     try {
+        const name = req.body.name;
+        const image = req.file.filename;
+        const userId = req.userId;
+
         
-        console.log(req.file);
+        // find and update
+            const updatedUser = await UserModel.findByIdAndUpdate(userId, {
+                name: name, photo: image
+            }, {new: true})
 
         return res.status(200).json({
             errors: false,
+            user: updatedUser,
             message: "successfully uploaded"
         })
     } catch (error) {

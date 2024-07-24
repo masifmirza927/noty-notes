@@ -17,7 +17,7 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <Link className='sidebar-link' to='/'>
+          <Link className='sidebar-link' to='/profile'>
             <User size={22} color='black' />
           </Link>
         </li>
