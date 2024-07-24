@@ -1,6 +1,6 @@
 import axios from "axios"
 import { getToken } from "../utils";
-const token = getToken();
+
 
 // creating axios client with headers
 export const httpClient = axios.create({
@@ -10,6 +10,7 @@ export const httpClient = axios.create({
 
 // Add a request interceptor
 httpClient.interceptors.request.use(function (config) {
+  const token = getToken();
   // Do something before request is sent
   if (token != null) {
     config.headers['Authorization'] = `Bearer ${token}`;
