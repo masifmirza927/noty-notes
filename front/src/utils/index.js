@@ -18,6 +18,10 @@ export const removeToken  = () => {
     return null;
 }
 
+export const updateUser = (user) => {
+     localStorage.setItem('user', JSON.stringify(user));
+
+}
 export const getUser = () => {
     const user = localStorage.getItem('user');
     if(user) {

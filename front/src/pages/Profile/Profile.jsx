@@ -1,28 +1,33 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import NewNote from '../../components/NewNote/NewNote'
 import Topbar from '../../components/Topbar/Topbar'
 import { Button, Form, Input } from 'antd';
 import { httpClient } from '../../lib/httpClient';
+import { updateUser } from '../../utils';
+import { AuthContext } from '../../context/AuthContext';
 
 const Profile = () => {
     const [image, setImage] = useState(null);
+    const ctx = useContext(AuthContext);
+    const [form] = Form.useForm();
 
     const onFinish = (values) => {
-
         // making web form through js
-        const form = new FormData();
-        form.append('name', values.name);
-        form.append('image', image);
+        const formDa = new FormData();
+        formDa.append('name', values.name);
+        formDa.append('image', image);
 
         // api call
-        httpClient.put("/update-profile", form, {
+        httpClient.put("/update-profile", formDa, {
             headers: {
                 "Content-Type" : "multipart/form-data"
             }
         }).then( res => {
-            console.log(res);
+            form.resetFields();
 
+            updateUser(res.data.user);
+            ctx.setUser(res.data.user);
         }).catch( (err) => { 
             console.log(err.message);
 
@@ -42,6 +47,7 @@ const Profile = () => {
                 <Topbar />
                 <div className='profile'>
                     <Form
+                        form={form}
                         name="basic"
                         labelCol={{
                             span: 8,

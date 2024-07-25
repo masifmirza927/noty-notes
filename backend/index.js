@@ -273,13 +273,15 @@ app.put("/update-profile", [AuthCheck, upload.single('image')], async (req, res)
         // find and update
             const updatedUser = await UserModel.findByIdAndUpdate(userId, {
                 name: name, photo: image
-            }, {new: true})
+            }, {new: true});
 
-        return res.status(200).json({
-            errors: false,
-            user: updatedUser,
-            message: "successfully uploaded"
-        })
+            const docWithGetters = updatedUser.toObject({ getters: true });
+
+            return res.status(200).json({
+                errors: false,
+                user: docWithGetters,
+                message: "successfully uploaded"
+            })
     } catch (error) {
         return res.status(500).json({
             errors: true,
