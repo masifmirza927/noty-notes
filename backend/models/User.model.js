@@ -1,5 +1,6 @@
 
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 // creating schema
 const userSchema = new mongoose.Schema({
@@ -17,6 +18,8 @@ const userSchema = new mongoose.Schema({
     },
     photo: {
         type: String,
+        default: "dummy.jpg",
+        get: attachServerUrlPhoto
     },
     gender: {
         type: String,
@@ -32,7 +35,11 @@ const userSchema = new mongoose.Schema({
     }
 }, {timestamps: true});
 
-// model
+// getter
+
+function attachServerUrlPhoto(value) {
+    return process.env.SERVER_URL + value;
+}
 
 const UserModel = mongoose.model("User", userSchema);
 

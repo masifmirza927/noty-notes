@@ -11,7 +11,7 @@ const Topbar = () => {
         <div className='photo'>
           {/* <img src='https://i.pravatar.cc/300' /> */}
           {
-            ctx.user?.photo && <img src={`http://localhost:3001/${ctx.user.photo}`} width='60px' />
+            ctx.user?.photo && <img src={ctx.user.photo} width='60px' />
           }
           
         </div>

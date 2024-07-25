@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 const port = 3001;
-const multer  = require('multer')
+const multer  = require('multer');
 const cors = require("cors");
 
 require('dotenv').config();

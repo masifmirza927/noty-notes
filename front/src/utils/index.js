@@ -17,3 +17,15 @@ export const removeToken  = () => {
     }
     return null;
 }
+
+export const getUser = () => {
+    const user = localStorage.getItem('user');
+    if(user) {
+        return JSON.parse(user);
+    }
+    return null;
+}
+
+export const removeUser = () => {
+    localStorage.removeItem('user');
+}
