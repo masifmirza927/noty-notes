@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getToken, getUser, removeToken, removeUser } from "../utils";
-import  {httpClient} from "../lib/httpClient";
+import { httpClient } from "../lib/httpClient";
 
 
 // create a context
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
         } else if (res.data.errors == false) {
             // saving access token to local storeage to keep the user logged in
             localStorage.setItem("accessToken", res.data.accessToken);
-            localStorage.setItem('user', JSON.stringify(res.data.user) );
+            localStorage.setItem('user', JSON.stringify(res.data.user));
             setUser(res.data.user);
             setIsLogin(true);
             navigate('/');
@@ -38,11 +38,16 @@ export const AuthProvider = ({ children }) => {
 
 
     // get all notes
-    const getUserNotes = async () => {
+    const getUserNotes = async (type = null) => {
         const token = getToken();
+        let url = `/notes/me`;
+
+        if(type !== null) {
+            url += `/${type}`;
+        }
 
         if (token) {
-            const res = await httpClient.get("/notes/me");
+            const res = await httpClient.get(url);
 
             if (res.data.errors == true) {
                 setError(res.data.message)
@@ -74,7 +79,7 @@ export const AuthProvider = ({ children }) => {
         const user = getUser();
         const verifyToken = async () => {
             const token = getToken();
-    
+
             if (token) {
                 setVerifyReq(true);
                 try {
@@ -97,7 +102,7 @@ export const AuthProvider = ({ children }) => {
                 navigate("/login");
             }
         };
-    
+
         verifyToken();
     }, []);
 

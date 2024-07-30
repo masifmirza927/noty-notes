@@ -6,7 +6,7 @@ import Home from "./pages/Home/Home";
 import Login from './pages/login/Login';
 import  {AuthProvider}  from './context/AuthContext';
 import Profile from './pages/Profile/Profile';
-import MainLahout from './components/Layouts/MainLahout';
+import Pinned from './pages/Pinned/Pinned';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -17,6 +17,7 @@ function App() {
         <Routes>
           <Route path='/' index element={<Home />} />
           <Route path='/profile' element={<Profile />} />
+          <Route path='/pines' element={<Pinned />} />
           <Route path='/login' element={<Login />} />
         </Routes>
       </AuthProvider>

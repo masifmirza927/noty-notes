@@ -27,7 +27,7 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <Link className='sidebar-link' to='/'>
+          <Link className='sidebar-link' to='/pines'>
             <Pin size={22} color='black' />
           </Link>
         </li>
