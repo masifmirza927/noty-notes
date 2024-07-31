@@ -29,11 +29,11 @@ const NoteCard = (props) => {
     }).catch(err => {
       console.log(err.message)
     }).finally(() => {
-        setTimeout(() => {
-          setIsModalOpen(false);
-          ctx.getUserNotes();
-        }, 1000)
-      })
+      setTimeout(() => {
+        setIsModalOpen(false);
+        ctx.getUserNotes();
+      }, 1000)
+    })
 
   };
 
@@ -42,12 +42,16 @@ const NoteCard = (props) => {
   };
 
 
-  const handlePin = (id) => {
+  const handlePin = (id, value) => {
     httpClient.put(`/notes/pinned/${id}`, {
-      "isPinned": true
+      "isPinned": value
     }).then(res => {
       if (res.data.errors == false) {
-        ctx.getUserNotes();
+        if (value == false) {
+          ctx.getUserNotes('isPinned');
+        } else if (value == true) {
+          ctx.getUserNotes();
+        }
       }
     }).catch((err) => {
       console.log(err.message)
@@ -71,7 +75,7 @@ const NoteCard = (props) => {
 
   const items = [
     {
-      label: <a onClick={() => handlePin(props.note._id)}><Pin size={15} className='flex gap-3' /> <span>Pin</span></a>,
+      label: (props.note.isPinned == true) ? <a onClick={() => handlePin(props.note._id, false)}><Pin size={15} className='flex gap-3' /> <span>Unpin</span></a> : <a onClick={() => handlePin(props.note._id, true)}><Pin size={15} className='flex gap-3' /> <span>Pin</span></a>,
       key: '0',
     },
     {

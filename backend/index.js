@@ -120,8 +120,6 @@ app.post("/user/login", async (req, res) => {
 });
 
 
-
-
 app.get("/notes/me/:type?", AuthCheck, async (req, res) => {
     try {
         const type = req.params.type;
@@ -144,6 +142,29 @@ app.get("/notes/me/:type?", AuthCheck, async (req, res) => {
             notes: notes
         })
     } catch (error) {
+        console.log(error.message);
+    }
+});
+
+app.get("/notes/search", AuthCheck, async (req, res) => {
+    try {
+        const searchQuery = req.query.q;
+        const isPinned = req.query.isPinned;
+
+        const userId = new mongoose.Types.ObjectId(req.body.userId);
+        const searchObj = { user: userId, title: { $regex: new RegExp(searchQuery, 'i') } };
+
+        if(isPinned) {
+            searchObj['isPinned'] = true;
+        }
+        
+        const notes = await NoteModel.find(searchObj);
+        return res.json({
+            errors: false,
+            notes: notes
+        })
+    } catch (error) {
+
         console.log(error.message);
     }
 });
