@@ -7,117 +7,26 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 const port = 3001;
-const multer = require('multer');
-const cors = require("cors");
 
+const cors = require("cors");
 require('dotenv').config();
+
+// importing routes
+const userRoutes = require("./routes/user.routes.js");
+
 
 // we are making uploads folder public
 app.use(express.static('uploads'));
 
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/')
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const ext = file.mimetype.split("/")[1];
-        cb(null, file.fieldname + '-' + uniqueSuffix + "." + ext);
-    }
-})
-
-const upload = multer({ storage: storage });
-
-
 //middleware
 app.use(express.json());
 app.use(cors());
-
 const AuthCheck = require("./middlewares/Auth.middleware.js");
 
-app.get("/", (req, res) => {
-    res.send("working...");
-});
 
-// register
-app.post("/user/register", async (req, res) => {
-    try {
-        const { name, email, password, photo, gender } = req.body;
-
-        // check user is already registered?
-        const alreadyRegister = await UserModel.findOne({ email: email });
-        if (alreadyRegister !== null) {
-            return res.status(400).json({
-                errors: true,
-                message: "user already registered"
-            })
-        }
-
-
-        // hash the password
-        const hashed = await bcrypt.hash(password, saltRounds);
-
-        // save user
-        const user = await UserModel.create({ name: name, email: email, password: hashed, photo: photo, gender: gender });
-
-        // generate jwt token
-
-        // send success response
-        res.status(201).json({
-            errors: false,
-            user: user,
-            message: "User successfully registered."
-        })
-
-
-    } catch (error) {
-
-    }
-});
-
-// login
-app.post("/user/login", async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        // find user is registered or not
-        const user = await UserModel.findOne({ email: email });
-        if (user === null) {
-            return res.status(200).json({
-                errors: true,
-                message: "username or password is incorrect!"
-            });
-        }
-
-        // then check password is correct ?
-        const isPassCorrect = await bcrypt.compare(password, user.password);
-        if (isPassCorrect === false) {
-            return res.status(200).json({
-                errors: true,
-                message: "username or password is incorrect!"
-            });
-        }
-
-        //todo JWT token
-        // we are generating jwt token for authentication, and giving it expiry of 1 hour.
-        const access_token = await jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '30m' });
-
-        // send success response
-        return res.status(200).json({
-            errors: false,
-            message: "successfully logged in",
-            accessToken: access_token,
-            user: { name: user.name, photo: user.photo, email: user.email }
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            errors: true,
-            message: "internal server error"
-        })
-    }
-});
+// routes
+app.use("/user", userRoutes);
 
 
 app.get("/notes/me/:type?", AuthCheck, async (req, res) => {
@@ -288,33 +197,6 @@ app.post("/user/verify", async (req, res) => {
 });
 
 
-// uploading files in node js
-app.put("/update-profile", [AuthCheck, upload.single('image')], async (req, res) => {
-    try {
-        const name = req.body.name;
-        const image = req.file.filename;
-        const userId = req.userId;
-
-
-        // find and update
-        const updatedUser = await UserModel.findByIdAndUpdate(userId, {
-            name: name, photo: image
-        }, { new: true });
-
-        const docWithGetters = updatedUser.toObject({ getters: true });
-
-        return res.status(200).json({
-            errors: false,
-            user: docWithGetters,
-            message: "successfully uploaded"
-        })
-    } catch (error) {
-        return res.status(500).json({
-            errors: true,
-            message: "internal server error"
-        })
-    }
-})
 
 
 

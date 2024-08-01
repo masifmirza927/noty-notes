@@ -19,7 +19,7 @@ const Profile = () => {
         formDa.append('image', image);
 
         // api call
-        httpClient.put("/update-profile", formDa, {
+        httpClient.put("/user/update-profile", formDa, {
             headers: {
                 "Content-Type" : "multipart/form-data"
             }
