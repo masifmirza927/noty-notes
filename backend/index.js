@@ -1,11 +1,8 @@
 const express = require("express");
 const app = express();
-const UserModel = require("./models/User.model");
 const NoteModel = require("./models/Note.model");
 const mongoose = require("mongoose");
-const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
-const saltRounds = 10;
 const port = 3001;
 
 const cors = require("cors");
@@ -37,7 +34,7 @@ app.get("/notes/me/:type?", AuthCheck, async (req, res) => {
         const userId = new mongoose.Types.ObjectId(req.body.userId);
         let query = { user: userId, isPinned: false, isArchived: false };
 
-        if(type) {
+        if (type) {
             query[type] = true;
         }
 
@@ -63,10 +60,10 @@ app.get("/notes/search", AuthCheck, async (req, res) => {
         const userId = new mongoose.Types.ObjectId(req.body.userId);
         const searchObj = { user: userId, title: { $regex: new RegExp(searchQuery, 'i') } };
 
-        if(isPinned) {
+        if (isPinned) {
             searchObj['isPinned'] = true;
         }
-        
+
         const notes = await NoteModel.find(searchObj);
         return res.json({
             errors: false,
@@ -198,9 +195,11 @@ app.post("/user/verify", async (req, res) => {
 
 
 
-
-
-mongoose.connect("mongodb://localhost:27017/notydb").then(() => {
+mongoose.connect(process.env.MONGO_DB_URL).then(() => {
     app.listen(port, () => console.log("server & db is up..."));
-})
+});
+
+// mongoose.connect("mongodb://localhost:27017/notydb").then(() => {
+//     app.listen(port, () => console.log("server & db is up..."));
+// })
 

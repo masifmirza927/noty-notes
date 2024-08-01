@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     photo: {
         type: String,
         default: "dummy.jpg",
-        get: attachServerUrlPhoto
+       //get: attachServerUrlPhoto
     },
     gender: {
         type: String,
@@ -37,9 +37,9 @@ const userSchema = new mongoose.Schema({
 
 // getter
 
-function attachServerUrlPhoto(value) {
-    return process.env.SERVER_URL + value;
-}
+// function attachServerUrlPhoto(value) {
+//     return process.env.SERVER_URL + value;
+// }
 
 const UserModel = mongoose.model("User", userSchema);
 

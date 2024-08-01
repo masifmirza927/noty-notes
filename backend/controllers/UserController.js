@@ -4,8 +4,14 @@ const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 require('dotenv').config();
 
+const cloudinary = require('cloudinary').v2;
 
-
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
 
 
 const loginUser = async (req, res) => {
@@ -92,9 +98,11 @@ const updateProfile = async (req, res) => {
         const image = req.file.filename;
         const userId = req.userId;
 
+        const cloudinaryImage = await cloudinary.uploader.upload(req.file.path);
+
         // find and update
         const updatedUser = await UserModel.findByIdAndUpdate(userId, {
-            name: name, photo: image
+            name: name, photo: cloudinaryImage.url
         }, { new: true });
 
         const docWithGetters = updatedUser.toObject({ getters: true });
@@ -105,6 +113,7 @@ const updateProfile = async (req, res) => {
             message: "successfully uploaded"
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             errors: true,
             message: "internal server error"
