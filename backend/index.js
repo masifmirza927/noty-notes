@@ -22,6 +22,10 @@ app.use(cors());
 const AuthCheck = require("./middlewares/Auth.middleware.js");
 
 
+app.get("/", (req, res) => {
+    return res.send("hello world")
+});
+
 // routes
 app.use("/user", userRoutes);
 
