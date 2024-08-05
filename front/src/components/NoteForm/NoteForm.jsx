@@ -28,7 +28,7 @@ const NoteForm = (props) => {
         console.log('Success:', values);
         setLoading(true);
 
-        axios.post("http://localhost:3001/notes", values, {
+        httpClient.post(`/notes`, values, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`
             }
